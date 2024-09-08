@@ -53,12 +53,7 @@ elif echo "$machine_arch" | grep -q "x86_64"; then
     fi
     chmod +x pppwn_x86_64
 elif echo "$machine_arch" | grep -q "mips"; then
-    opkg install lscpu
-
-    # Get byte order
-    BYTE_ORDER=$(lscpu | grep "Byte Order" | awk '{print $3, $4}')
-    
-    if [ "$BYTE_ORDER" == "Big Endian" ]; then
+    if [ -z "$(cat /etc/openwrt_release | grep -i ramips)" ];then
         wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_mips
         if [ $? -ne 0 ]; then
             echo "Failed to download pppwn_mips"
@@ -123,7 +118,7 @@ fi
 echo
 read -p "Do you want to run PPPwn on startup? (Y/N): " run_on_startup
 if [ "$run_on_startup" = "Y" ] || [ "$run_on_startup" = "y" ]; then
-    echo "cd /root/PPPwn_WRT-main && ./run.sh" > /etc/rc.local
+    echo -en "sleep 10\nifconfig eth0 down\nsleep 5\nifconfig eth0 up\nsleep 5\nsh /root/PPPwn_WRT-main/run.sh\n" > /etc/rc.local
 fi
 
 # Shutdown after
@@ -134,17 +129,6 @@ if [ "$shutdown" = "Y" ] || [ "$shutdown" = "y" ]; then
     read -p "Are you sure you want to enable this feature? (Y/N): " bootloop
     if [ "$bootloop" = "Y" ] || [ "$bootloop" = "y" ]; then
         echo "poweroff" >> run.sh
-    fi
-fi
-
-# Install nano
-echo
-read -p "Do you want to install nano for editing the button config? (Y/N): " nano
-if [ "$nano" = "Y" ] || [ "$nano" = "y" ]; then
-    opkg install nano
-    if [ $? -ne 0 ]; then
-        echo "Failed to install nano"
-        exit 1
     fi
 fi
 
