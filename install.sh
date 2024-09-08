@@ -32,46 +32,43 @@ machine_arch=$(uname -m)
 
 # Choose script based on the architecture
 if echo "$machine_arch" | grep -q "arch64"; then
-    wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_arch64
+    wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_arch64 -O pppwn
     if [ $? -ne 0 ]; then
         echo "Failed to download pppwn_arch64"
         exit 1
     fi
-    chmod +x pppwn_arch64
 elif echo "$machine_arch" | grep -q "armv7"; then
-    wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_armv7
+    wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_armv7 -O pppwn
     if [ $? -ne 0 ]; then
         echo "Failed to download pppwn_armv7"
         exit 1
     fi
-    chmod +x pppwn_armv7
 elif echo "$machine_arch" | grep -q "x86_64"; then
-    wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_x86_64
+    wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_x86_64 -O pppwn
     if [ $? -ne 0 ]; then
         echo "Failed to download pppwn_x86_64"
         exit 1
     fi
-    chmod +x pppwn_x86_64
 elif echo "$machine_arch" | grep -q "mips"; then
     if [ -z "$(cat /etc/openwrt_release | grep -i ramips)" ];then
-        wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_mips
+        wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_mips -O pppwn
         if [ $? -ne 0 ]; then
             echo "Failed to download pppwn_mips"
             exit 1
         fi
-        chmod +x pppwn_mips
     else
-        wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_mipsel
+        wget https://github.com/MODDEDWARFARE/PPPwn_WRT/raw/main/pppwn_mipsel -O pppwn
         if [ $? -ne 0 ]; then
             echo "Failed to download pppwn_mipsel"
             exit 1
         fi
-        chmod +x pppwn_mipsel
     fi
 else
     echo "Unsupported architecture: $machine_arch"
     exit 1
 fi
+
+chmod +x pppwn
 
 # Select interface
 ip link
